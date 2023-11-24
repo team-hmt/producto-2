@@ -2,7 +2,7 @@
 
 namespace app\models;
 
-class Instripcion
+class Inscripcion
 {
     public $Id_inscripcion;
     public $Id_persona;

@@ -1,15 +1,5 @@
 version: '3'
 services:
-  web:
-    image: php:8.2-apache
-    volumes:
-      - ./appEventos:/var/www/html
-    ports:
-      - "80:80"
-    depends_on:
-      - db
-    environment:
-      - DATABASE_HOST=db
   db:
     image: mysql:8.0
     volumes:
@@ -22,15 +12,16 @@ services:
       - MYSQL_DATABASE=mydatabase
       - MYSQL_USER=myuser
       - MYSQL_PASSWORD=mypassword
+
   php:
-    image: php:8.2-fpm
+    build:
+      context: ./appEventos
+      dockerfile: Dockerfile
     volumes:
       - ./appEventos:/var/www/html
     restart: always
-    environment:
-      - PDO_MYSQL_DSN=mysql:host=db;dbname=mydatabase;charset=utf8mb4
-      - PDO_MYSQL_USERNAME=myuser
-      - PDO_MYSQL_PASSWORD=mypassword
+    ports:
+      - "80:80"
     depends_on:
       - db
 
