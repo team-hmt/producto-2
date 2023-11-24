@@ -1,30 +1,32 @@
 <?php
 
 include_once 'config/config.php';
-include_once APPROOT . 'app/controllers/Auth.php';
+include_once APPROOT . 'app/controllers/RegisterController.php';
+include_once APPROOT . 'app/controllers/LoginController.php';
 include_once APPROOT . 'app/Router.php';
 
-use app\controllers\Auth;
+use app\controllers\LoginController;
+use app\controllers\RegisterController;
 use app\Router;
 
 Router::get("/login", function() {
-    $authController = new Auth();
-    $authController->showLogin();
+    $controller = new LoginController();
+    $controller->showLogin();
 });
 
 Router::post("/login", function() {
-    $authController = new Auth();
-    $authController->handleLoginSubmission();
+    $controller = new LoginController();
+    $controller->handleLoginSubmission();
 });
 
 Router::get("/registro", function() {
-    $authController = new Auth();
-    $authController->showRegistro();
+    $controller = new RegisterController();
+    $controller->showRegistro();
 });
 
 Router::post("/registro", function() {
-    $authController = new Auth();
-    $authController->handleRegistroSubmission();
+    $controller = new RegisterController();
+    $controller->handleRegistroSubmission();
 });
 
 Router::resolve();
