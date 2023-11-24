@@ -5,6 +5,7 @@ namespace app\controllers;
 include_once APPROOT . 'app/models/Usuario.php';
 
 use app\models\Usuario;
+use app\Router;
 use http\Client\Curl\User;
 
 class Auth
@@ -74,11 +75,12 @@ class Auth
             return;
         }
 
-        if (password_verify($password, $user->Password)) {
-            echo "Logged In";
-        } else {
+        if (!password_verify($password, $user->Password)) {
             $this->showLoginWithMessage("Usuario o contraseña incorrecta");
+            return;
         }
+
+        Router::redirect('/home');
     }
 
 
@@ -126,13 +128,14 @@ class Auth
      */
     private function processRegistro(string $username, string $password, string $confirm_password): void
     {
+        // TODO autologin
+        // TODO implement tipo usuario
+        // TODO reenviar usuario (evita reiniciar el formulario en caso de error)
+
         // Verify input
         // Verify user
         // Hash password
-        // Make User
-        // Save User
-
-        // TODO reenviar usuario (evita reiniciar el formulario en caso de error)
+        // Make and save User
         if(empty(trim($username))) {
             $this->showRegistroWithMessage("Error: Please enter a username.");
             return;
@@ -160,11 +163,10 @@ class Auth
         $user = new Usuario();
         $user->Username = $username;
         $user->Password = $password_hash;
-
-        // TODO implement tipo usuario
         $user->Id_tipo_usuario = 1;
-
         $user->Save();
+
+        Router::redirect('/login');
     }
 
     /**

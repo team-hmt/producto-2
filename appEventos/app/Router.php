@@ -2,6 +2,8 @@
 
 namespace app;
 
+use JetBrains\PhpStorm\NoReturn;
+
 class Router {
     private static array $getRoutes = [];
     private static array $postRoutes = [];
@@ -16,7 +18,7 @@ class Router {
         self::$postRoutes[$route] = $action;
     }
 
-    public function redirect($url): void
+    #[NoReturn] public static function redirect($url): void
     {
         header('Location: ' . $url);
         exit();
