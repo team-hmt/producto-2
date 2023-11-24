@@ -3,28 +3,37 @@
 namespace app;
 
 class Router {
-    private $getRoutes = [];
-    private $postRoutes = [];
+    private static array $getRoutes = [];
+    private static array $postRoutes = [];
 
-    public function get($route, $action) {
-        $this->getRoutes[$route] = $action;
+    public static function get($route, $action): void
+    {
+        self::$getRoutes[$route] = $action;
     }
 
-    public function post($route, $action) {
-        $this->postRoutes[$route] = $action;
+    public static function post($route, $action): void
+    {
+        self::$postRoutes[$route] = $action;
     }
 
-    public function resolve() {
+    public function redirect($url): void
+    {
+        header('Location: ' . $url);
+        exit();
+    }
+
+    public static function resolve(): void
+    {
         $requestURI = parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH);
         $method = $_SERVER['REQUEST_METHOD'];
 
         if($method === 'GET') {
-            if(isset($this->getRoutes[$requestURI])) {
-                call_user_func($this->getRoutes[$requestURI]);
+            if(isset(self::$getRoutes[$requestURI])) {
+                call_user_func(self::$getRoutes[$requestURI]);
             }
         } else if($method === 'POST') {
-            if(isset($this->postRoutes[$requestURI])) {
-                call_user_func($this->postRoutes[$requestURI]);
+            if(isset(self::$postRoutes[$requestURI])) {
+                call_user_func(self::$postRoutes[$requestURI]);
             }
         }
     }

@@ -31,13 +31,11 @@
                     Recuérdame
                 </label>
             </div>
-            <div class="d-flex justify-content-end">
+            <!--<div class="d-flex justify-content-end">
                 <a href="" class="btn btn-link">¿Olvidaste tu contraseña?</a>
-            </div>
+            </div>-->
             <button class="btn btn-primary w-100 py-2" type="submit">Iniciar sesión</button>
-            <p class="mt-3 text-muted">¿No tienes una cuenta?
-                <a href="">Regístrate</a>
-            </p>
+            <p class="mt-3 text-muted">¿No tienes una cuenta? <a href="http://localhost:80/registro">Regístrate</a></p>
             <p class="mt-5 mb-3 text-danger">
                 <?=
                 /** @var string $errorMessage */

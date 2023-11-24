@@ -7,17 +7,24 @@ include_once APPROOT . 'app/Router.php';
 use app\controllers\Auth;
 use app\Router;
 
-$router = new Router();
-
-$router->get("/login", function() {
+Router::get("/login", function() {
     $authController = new Auth();
-    $authController->login_get();
+    $authController->showLogin();
 });
 
-$router->post("/login", function() {
+Router::post("/login", function() {
     $authController = new Auth();
-    $authController->login_post();
+    $authController->handleLoginSubmission();
 });
 
+Router::get("/registro", function() {
+    $authController = new Auth();
+    $authController->showRegistro();
+});
 
-$router->resolve();
+Router::post("/registro", function() {
+    $authController = new Auth();
+    $authController->handleRegistroSubmission();
+});
+
+Router::resolve();

@@ -73,14 +73,16 @@ class Usuario {
      */
     public function Save(): ?Usuario
     {
+        // TODO utilizar id persona.
+        // TODO utilizar id tipo usuario
+
+        // Check unique user
         // Get DB
         // Run query
         // Get last Insert
         // Parse User id
 
-        // TODO revisar si usuario es unico
-        // TODO utilizar id persona.
-        // TODO utilizar id tipo usuario
+        if (self::Exists($this->Username)) return null;
 
         $db = AppDatabase::getInstance()->getConnection();
 

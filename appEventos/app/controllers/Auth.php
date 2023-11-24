@@ -5,33 +5,27 @@ namespace app\controllers;
 include_once APPROOT . 'app/models/Usuario.php';
 
 use app\models\Usuario;
+use http\Client\Curl\User;
 
 class Auth
 {
 
     /**
-     * Entrypoint
+     * GET
+     * Entrypoint para login
      * @return void
      */
-    public function login_get(): void
+    public function showLogin(): void
     {
-        $this->_login_get("");
+        $this->showLoginWithMessage("");
     }
 
     /**
-     * Entrypoint
+     * POST
+     * Entrypoint para formulario post login
      * @return void
      */
-    public function register_get(): void
-    {
-
-    }
-
-    /**
-     * Entrypoint
-     * @return void
-     */
-    public function login_post(): void
+    public function handleLoginSubmission(): void
     {
         // Get post params
         // trigger register
@@ -39,14 +33,70 @@ class Auth
         $username = $this->_sanitizeInput($_POST['username']);
         $password = $this->_sanitizeInput($_POST['password']);
 
-        $this->_login_post($username, $password);
+        $this->processLogin($username, $password);
     }
 
     /**
-     * Entrypoint
+     * Muestra la vista login
+     * @param string $errorMessage Error a mostrar en login.
      * @return void
      */
-    public function registro_post(): void
+    private function showLoginWithMessage(string $errorMessage): void
+    {
+        require(APPROOT . 'app/views/auth/login.php');
+    }
+
+    /**
+     * @param string $username Usuario a autenticar
+     * @param string $password Contraseña del usuario a autenticar
+     * @return void
+     */
+    private function processLogin(string $username, string $password): void
+    {
+        // Verify input
+        // Verify user
+        // Verify password
+
+        // TODO reenviar usuario (evita reiniciar el formulario en caso de error)
+        if(empty(trim($username))) {
+            $this->showLoginWithMessage("Por favor, ingrese un nombre de usuario");
+            return;
+        }
+        else if(empty(trim($password))) {
+            $this->showLoginWithMessage("Por favor, ingrese una contraseña");
+            return;
+        }
+
+        $user = Usuario::getUserByName($username);
+
+        if (empty($user->Password)) {
+            $this->showLoginWithMessage("Usuario o contraseña incorrecta");
+            return;
+        }
+
+        if (password_verify($password, $user->Password)) {
+            echo "Logged In";
+        } else {
+            $this->showLoginWithMessage("Usuario o contraseña incorrecta");
+        }
+    }
+
+
+    /**
+     * GET
+     * Entrypoint para registro
+     * @return void
+     */
+    public function showRegistro(): void
+    {
+        $this->showRegistroWithMessage("");
+    }
+
+    /**
+     * Entrypoint para formulario post registro
+     * @return void
+     */
+    public function handleRegistroSubmission(): void
     {
         // Get post params
         // trigger register
@@ -55,55 +105,17 @@ class Auth
         $password = $this->_sanitizeInput($_POST['password']);
         $confirm_password = $this->_sanitizeInput($_POST['confirm_password']);
 
-        $this->_registro_post($username, $password, $confirm_password);
+        $this->processRegistro($username, $password, $confirm_password);
     }
 
     /**
+     * Muestra la vista registro
      * @param string $errorMessage Error a mostrar en login.
      * @return void
      */
-    private function _login_get(string $errorMessage): void
+    private function showRegistroWithMessage(string $errorMessage): void
     {
-        require(APPROOT . 'app/views/auth/login.php');
-    }
-
-    private function _register_get(string $errorMessage): void
-    {
-
-    }
-
-    /**
-     * @param string $username Usuario a autenticar
-     * @param string $password Contraseña del usuario a autenticar
-     * @return void
-     */
-    private function _login_post(string $username, string $password): void
-    {
-        // Verify input
-        // Verify user
-        // Verify password
-
-        if(empty(trim($username))) {
-            $this->_login_get("Error: Please enter a username.");
-            return;
-        }
-        else if(empty(trim($password))) {
-            $this->_login_get("Error: Please enter a password.");
-            return;
-        }
-
-        $user = Usuario::getUserByName($username);
-
-        if (empty($user->Password)) {
-            $this->_login_get("Error: User not found.");
-            return;
-        }
-
-        if (password_verify($password, $user->Password)) {
-            echo "Logged In";
-        } else {
-            echo "Incorrect password";
-        }
+        require(APPROOT . 'app/views/auth/registro.php');
     }
 
     /**
@@ -112,7 +124,7 @@ class Auth
      * @param string $confirm_password password del usuario
      * @return void
      */
-    private function _registro_post(string $username, string $password, string $confirm_password): void
+    private function processRegistro(string $username, string $password, string $confirm_password): void
     {
         // Verify input
         // Verify user
@@ -120,25 +132,26 @@ class Auth
         // Make User
         // Save User
 
+        // TODO reenviar usuario (evita reiniciar el formulario en caso de error)
         if(empty(trim($username))) {
-            echo "Error: Please enter a username.";
+            $this->showRegistroWithMessage("Error: Please enter a username.");
             return;
         }
         else if(empty(trim($password))) {
-            echo "Error: Please enter a password.";
+            $this->showRegistroWithMessage("Error: Please enter a password.");
             return;
         }
         else if(empty(trim($confirm_password))) {
-            echo "Error: Please confirm your password.";
+            $this->showRegistroWithMessage("Error: Please confirm your password.");
             return;
         }
         else if($password !== $confirm_password) {
-            echo "Error: Password and confirm password do not match.";
+            $this->showRegistroWithMessage("Error: Password and confirm password do not match.");
             return;
         }
 
         if (Usuario::Exists($username)) {
-            echo "Error: User already exists.";
+            $this->showRegistroWithMessage("Error: User already exists.");
             return;
         }
 
@@ -148,18 +161,22 @@ class Auth
         $user->Username = $username;
         $user->Password = $password_hash;
 
-        // TODO implement
+        // TODO implement tipo usuario
         $user->Id_tipo_usuario = 1;
 
         $user->Save();
     }
 
-    private function _sanitizeInput($input): string
+    /**
+     * TODO
+     * @param string $var nombre del parametro a verificar
+     * @return string Texto verificado
+     */
+    private function _sanitizeInput(string $var): string
     {
-        return $input;
+        return $var;
 
-        // TODO
-        //$sanitizedInput = filter_input(INPUT_POST, $input, FILTER_UNSAFE_RAW);
+        //$sanitizedInput = filter_input(INPUT_POST, $var, FILTER_UNSAFE_RAW);
         //return $sanitizedInput !== null ? $sanitizedInput : '';
     }
 }
