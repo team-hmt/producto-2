@@ -13,16 +13,16 @@ class Auth
      * Entrypoint
      * @return void
      */
-    public function login_get()
+    public function login_get(): void
     {
-
+        $this->_login_get("");
     }
 
     /**
      * Entrypoint
      * @return void
      */
-    public function register_get()
+    public function register_get(): void
     {
 
     }
@@ -58,11 +58,17 @@ class Auth
         $this->_registro_post($username, $password, $confirm_password);
     }
 
-    private function _login_get(string $message) {
-
+    /**
+     * @param string $errorMessage Error a mostrar en login.
+     * @return void
+     */
+    private function _login_get(string $errorMessage): void
+    {
+        require(APPROOT . 'app/views/auth/login.php');
     }
 
-    private function _register_get(string $message) {
+    private function _register_get(string $errorMessage): void
+    {
 
     }
 
@@ -78,18 +84,18 @@ class Auth
         // Verify password
 
         if(empty(trim($username))) {
-            echo "Error: Please enter a username.";
+            $this->_login_get("Error: Please enter a username.");
             return;
         }
         else if(empty(trim($password))) {
-            echo "Error: Please enter a password.";
+            $this->_login_get("Error: Please enter a password.");
             return;
         }
 
         $user = Usuario::getUserByName($username);
 
         if (empty($user->Password)) {
-            echo "Error: User not found.";
+            $this->_login_get("Error: User not found.");
             return;
         }
 
