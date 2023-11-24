@@ -48,7 +48,7 @@ class Usuario {
         return null;
     }
 
-    public function Exists(): bool
+    public static function Exists(string $userName): bool
     {
         // Get DB
         // Run query
@@ -60,7 +60,7 @@ class Usuario {
             'SELECT * FROM Usuarios WHERE Username = :Username'
         );
         $query->execute([
-            'Username' => $this->Username,
+            'Username' => $userName,
         ]);
 
         $userExists = $query->fetch(PDO::FETCH_ASSOC);

@@ -7,13 +7,12 @@ use app\controllers\Auth;
 
 $auth = new Auth();
 
-// Mock register
 $_POST['username'] = 'user_test_1';
 $_POST['password'] = 'password_test_1';
 $_POST['confirm_password'] = 'password_test_1';
+
+// Mock register
 $auth->registro_post();
 
 // Mock login
-$_POST['username'] = 'user_test_1';
-$_POST['password'] = 'password_test_1';
 $auth->login_post();

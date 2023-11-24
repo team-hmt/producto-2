@@ -75,7 +75,7 @@ class Auth
     {
         // Verify input
         // Verify user
-        // Hash password
+        // Verify password
 
         if(empty(trim($username))) {
             echo "Error: Please enter a username.";
@@ -88,7 +88,12 @@ class Auth
 
         $user = Usuario::getUserByName($username);
 
-        if (password_verify($user->Password, $user->Password)) {
+        if (empty($user->Password)) {
+            echo "Error: User not found.";
+            return;
+        }
+
+        if (password_verify($password, $user->Password)) {
             echo "Logged In";
         } else {
             echo "Incorrect password";
@@ -126,7 +131,7 @@ class Auth
             return;
         }
 
-        if (!Usuario::getUserByName($username)) {
+        if (Usuario::Exists($username)) {
             echo "Error: User already exists.";
             return;
         }
