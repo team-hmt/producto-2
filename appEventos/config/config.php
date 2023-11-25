@@ -1,7 +1,7 @@
 <?php
 
 // Site
-const SITENAME = 'Your App';
+const APP_NAME = 'AppEventos';
 const URLROOT = 'http://localhost/';
 
 // DB

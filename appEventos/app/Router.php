@@ -8,20 +8,42 @@ class Router {
     private static array $getRoutes = [];
     private static array $postRoutes = [];
 
-    public static function get($route, $action): void
+    public static function get(string $route, callable $action): void
     {
         self::$getRoutes[$route] = $action;
     }
 
-    public static function post($route, $action): void
+    public static function post(string $route, callable $action): void
     {
         self::$postRoutes[$route] = $action;
     }
 
-    #[NoReturn] public static function redirect($url): void
+    #[NoReturn] public static function redirect(string $url, mixed $params): void
     {
+        if (isset($params) && $params != null) {
+            if (session_status() == PHP_SESSION_NONE) {
+                session_start();
+            }
+            $_SESSION['flash_message'] = $params;
+        }
+
         header('Location: ' . $url);
         exit();
+    }
+
+    public static function read() : mixed
+    {
+        if (session_status() == PHP_SESSION_NONE) {
+            session_start();
+        }
+
+        if (isset($_SESSION['flash_message']))
+        {
+            $result = $_SESSION['flash_message'];
+            unset($_SESSION['flash_message']);
+            return $result;
+        }
+        return null;
     }
 
     public static function resolve(): void

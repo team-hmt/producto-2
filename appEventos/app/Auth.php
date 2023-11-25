@@ -1,10 +1,10 @@
 <?php
 
-namespace app\traits;
+namespace app;
 
 use app\models\Usuario;
 
-trait Authentication
+class Auth
 {
     private static array $auth_session_map = [];
 
@@ -33,7 +33,7 @@ trait Authentication
      *  Get the user by its session ID
      * @return Usuario|null
      */
-    protected static function user(): ?Usuario
+    public static function user(): ?Usuario
     {
         // check is authenticated
         // Get user
@@ -47,7 +47,7 @@ trait Authentication
      * @param string $password
      * @return bool
      */
-    protected static function checkPassword(string $username, string $password): bool
+    public static function checkPassword(string $username, string $password): bool
     {
         // Get user from DB
         // Validate password against hash
@@ -62,7 +62,7 @@ trait Authentication
      * @param bool $remember
      * @return bool
      */
-    protected static function login(string $username, string $password, bool $remember): bool
+    public static function login(string $username, string $password, bool $remember): bool
     {
         // check password
         // process login
@@ -76,7 +76,7 @@ trait Authentication
      * @param bool $remember
      * @return void
      */
-    protected static function processLogin(string $username, bool $remember): void
+    public static function processLogin(string $username, bool $remember): void
     {
         // Validate credentials
         // Create session
@@ -88,7 +88,7 @@ trait Authentication
      *  Removes the session of user.
      * @return void
      */
-    protected static function logout(): void
+    public static function logout(): void
     {
         // Check client has auth cookie
         // Remove session cookie
@@ -101,7 +101,7 @@ trait Authentication
      * @param string $password
      * @return bool
      */
-    protected static function register(string $username, string $password): bool
+    public static function register(string $username, string $password): bool
     {
         // Create user model
         // Store user model
@@ -115,7 +115,7 @@ trait Authentication
      * Checks if user is authenticated
      * @return bool
      */
-    protected static function isAuthenticated(): bool
+    public static function isAuthenticated(): bool
     {
         // Check session header
         // check session exists
@@ -127,7 +127,7 @@ trait Authentication
      * Checks if user is guest.
      * @return bool
      */
-    protected static function isGuest(): bool
+    public static function isGuest(): bool
     {
         return !self::isAuthenticated();
     }

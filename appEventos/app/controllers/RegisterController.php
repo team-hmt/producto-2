@@ -14,7 +14,7 @@ class RegisterController
      * Entrypoint para registro
      * @return void
      */
-    public function showRegistro(): void
+    public function show(): void
     {
         $this->showRegistroWithMessage("");
     }
@@ -91,7 +91,7 @@ class RegisterController
         $user->Id_tipo_usuario = 1;
         $user->Save();
 
-        Router::redirect('/login');
+        Router::redirect('/login', null);
     }
 
     /**

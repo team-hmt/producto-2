@@ -58,7 +58,7 @@
 <body>
 
 <main>
-    <form action="http://localhost/registro" method="post">
+    <form action="/registro" method="post">
         <h1>Registro</h1>
         <label for="username">Usuario</label><br>
         <input type="text" id="username" name="username"><br>

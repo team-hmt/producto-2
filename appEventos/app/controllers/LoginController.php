@@ -4,17 +4,20 @@ namespace app\controllers;
 
 use app\models\Usuario;
 use app\Router;
+use http\Message;
 
 class LoginController
 {
     /**
      * GET
-     * Entrypoint para login
+     * Muestra la vista login.
+     * @param string $message Mensaje a mostrar
+     * @param string $errorMessage Mensaje de error del formulario a mostrar.
      * @return void
      */
-    public function showLogin(): void
+    public function show(string $message = "", string $errorMessage = ""): void
     {
-        $this->showLoginWithMessage("");
+        require(APPROOT . 'app/views/auth/login.php');
     }
 
     /**
@@ -34,16 +37,6 @@ class LoginController
     }
 
     /**
-     * Muestra la vista login
-     * @param string $errorMessage Error a mostrar en login.
-     * @return void
-     */
-    private function showLoginWithMessage(string $errorMessage): void
-    {
-        require(APPROOT . 'app/views/auth/login.php');
-    }
-
-    /**
      * @param string $username Usuario a autenticar
      * @param string $password Contraseña del usuario a autenticar
      * @return void
@@ -56,27 +49,27 @@ class LoginController
 
         // TODO reenviar usuario (evita reiniciar el formulario en caso de error)
         if(empty(trim($username))) {
-            $this->showLoginWithMessage("Por favor, ingrese un nombre de usuario");
+            $this->show(errorMessage: "Por favor, ingrese un nombre de usuario");
             return;
         }
         else if(empty(trim($password))) {
-            $this->showLoginWithMessage("Por favor, ingrese una contraseña");
+            $this->show(errorMessage: "Por favor, ingrese una contraseña");
             return;
         }
 
         $user = Usuario::getUserByName($username);
 
         if (empty($user->Password)) {
-            $this->showLoginWithMessage("Usuario o contraseña incorrecta");
+            $this->show(errorMessage: "Usuario o contraseña incorrecta");
             return;
         }
 
         if (!password_verify($password, $user->Password)) {
-            $this->showLoginWithMessage("Usuario o contraseña incorrecta");
+            $this->show(errorMessage: "Usuario o contraseña incorrecta");
             return;
         }
 
-        Router::redirect('/home');
+        Router::redirect('/', null);
     }
 
     /**
