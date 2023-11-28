@@ -21,9 +21,6 @@ class Router {
     #[NoReturn] public static function redirect(string $url, mixed $params): void
     {
         if (isset($params) && $params != null) {
-            if (session_status() == PHP_SESSION_NONE) {
-                session_start();
-            }
             $_SESSION['flash_message'] = $params;
         }
 
@@ -33,10 +30,6 @@ class Router {
 
     public static function read() : mixed
     {
-        if (session_status() == PHP_SESSION_NONE) {
-            session_start();
-        }
-
         if (isset($_SESSION['flash_message']))
         {
             $result = $_SESSION['flash_message'];

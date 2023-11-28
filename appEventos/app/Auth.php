@@ -6,27 +6,24 @@ use app\models\Usuario;
 
 class Auth
 {
-    private static array $auth_session_map = [];
 
-    // Add a new session to a user with True on success
-    private static function addSession(string $userName): bool
+    // Add a new session
+    private static function addSession(string $userName): void
     {
-        $session = uniqid('session_');
-
-        if (!array_key_exists($session, self::$auth_session_map)) {
-            self::$auth_session_map[$session] = $userName;
-            return true;
-        }
-
-        return false;
+        $_SESSION["auth"] = $userName;
     }
 
     // Removes a sessinion by its code.
-    private static function removeSession(string $session): void
+    private static function removeSession(): void
     {
-        if (array_key_exists($session, self::$auth_session_map)) {
-            unset(self::$auth_session_map[$session]);
+        if (!empty($_SESSION["auth"])) {
+            unset($_SESSION["auth"]);
         }
+    }
+
+    public static function check(): bool
+    {
+        return (!empty($_SESSION["auth"]));
     }
 
     /** TODO
@@ -35,27 +32,25 @@ class Auth
      */
     public static function user(): ?Usuario
     {
-        // check is authenticated
         // Get user
 
         return null;
     }
 
-    /** TODO
+    /**
      *  Checks a user's password
-     * @param string $username
+     * @param string $input
      * @param string $password
      * @return bool
      */
-    public static function checkPassword(string $username, string $password): bool
+    public static function checkPassword(string $input, string $password): bool
     {
-        // Get user from DB
         // Validate password against hash
 
-        return false;
+        return password_verify($input, $password);
     }
 
-    /** TODO
+    /**
      *  Authenticates the user for login
      * @param string $username
      * @param string $password
@@ -64,24 +59,37 @@ class Auth
      */
     public static function login(string $username, string $password, bool $remember): bool
     {
+        // Get User
         // check password
         // process login
 
-        return false;
+        $user = Usuario::getUserByName($username);
+
+        if(empty($user->Password)) return false;
+        if (!self::checkPassword($password, $user->Password)) return false;
+
+        self::processLogin($user->Username, $remember);
+        return true;
     }
 
-    /** TODO
+    /**
      *  Process the session login of a user.
      * @param string $username
-     * @param bool $remember
+     * @param bool $remember TODO
      * @return void
      */
     public static function processLogin(string $username, bool $remember): void
     {
-        // Validate credentials
         // Create session
         // store session cookie on client
-        // Redirect to home
+
+
+        self::addSession($username);
+
+        /*if ($remember) {
+            $lifetime = 60 * 60 * 24 * 7; // 1 week
+            setcookie(session_name(), session_id(), time() + $lifetime);
+        }*/
     }
 
     /** TODO
@@ -91,34 +99,32 @@ class Auth
     public static function logout(): void
     {
         // Check client has auth cookie
-        // Remove session cookie
-        // Remove session from server (when applicable)
+        // Remove session map (when applicable)
+        // Remove session
+
+        if(self::isGuest()) return;
+        self::removeSession();
+
+        session_unset();
+        session_destroy();
+
+        Router::redirect("/movies", null);
     }
 
     /** TODO
      *  Creates a new user. Logs user in.
+     * @param string $firstName
+     * @param string $lastName
      * @param string $username
      * @param string $password
      * @return bool
      */
-    public static function register(string $username, string $password): bool
+    public static function register(string $firstName, string $lastName, string $username, string $password): bool
     {
         // Create user model
         // Store user model
         // login user
         // Redirect to home
-
-        return false;
-    }
-
-    /** TODO
-     * Checks if user is authenticated
-     * @return bool
-     */
-    public static function isAuthenticated(): bool
-    {
-        // Check session header
-        // check session exists
 
         return false;
     }
@@ -129,6 +135,6 @@ class Auth
      */
     public static function isGuest(): bool
     {
-        return !self::isAuthenticated();
+        return !self::check();
     }
 }

@@ -3,7 +3,7 @@ include_once APPROOT . 'app/Auth.php';
 
 function route(string $path, string $name): string
 {
-    $isActive = ($_SERVER['REQUEST_URI'] == $path) ? 'active' : '';
+    $isActive = (parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH) == $path);
 
     if ($isActive) {
         return '<li class="nav-item"><a href="'.$path.'" class="nav-link active" aria-current="page">'.$name.'</a></li>';
@@ -24,13 +24,14 @@ function route(string $path, string $name): string
         </a>
 
         <ul class="nav nav-pills">
-            <?= route("/movies", "Movies") ?>
 
-            <?php if (\app\Auth::isGuest()): ?>
-                <?= route("/login", "Login") ?>
-                <?= route("/registro", "Registro") ?>
+            <?php if (\app\Auth::Check()): ?>
+                <?= route("/movies", '<i class="bi bi-film"></i> Cartelera') ?>
+                <?= route("/user", '<i class="bi bi-person-circle"></i> Usuario') ?>
+                <?= route("/logout", '<i class="bi bi-box-arrow-right"></i> Logout') ?>
             <?php else: ?>
-                <?= route("/user", "Usuario") ?>
+                <?= route("/login", '<i class="bi bi-box-arrow-in-right"></i> Login') ?>
+                <?= route("/registro", '<i class="bi bi-person-plus-fill"></i> Registro') ?>
             <?php endif; ?>
         </ul>
     </header>

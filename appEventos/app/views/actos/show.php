@@ -60,13 +60,16 @@ require_once APPROOT . 'app/views/widgets/appbar.php';
             </div>
         </div>
         <div class="card-footer">
-            <?php if (Auth::isGuest()): ?>
+            <?php if (Auth::check()): ?>
                 <div class="d-flex align-items-center">
                     <a href="/movies" class="btn btn-outline-primary me-2"><i class="bi bi-arrow-left"></i> Volver</a>
                     <form method="POST" action="/inscribe">
                         <input type="hidden" name="id" value="<?= $movie["id"] ?>">
                         <button type="submit" class="btn btn-primary ml-2">Inscribirse</button>
                     </form>
+                    <div class="mx-auto"></div>
+                    <a href="/movie/edit?id=<?= $movie["id"] ?>" class="btn btn-warning mx-2">Edit</a>
+                    <a href="/opcion3" class="btn btn-danger mx-2">Remove</a>
                 </div>
             <?php else: ?>
                 <a href="<?= "/movies" ?>" class="btn btn-primary"><i class="bi bi-arrow-left"></i> Volver</a>

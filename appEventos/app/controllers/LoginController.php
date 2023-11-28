@@ -2,6 +2,9 @@
 
 namespace app\controllers;
 
+include_once APPROOT . "app/Auth.php";
+
+use app\Auth;
 use app\models\Usuario;
 use app\Router;
 use http\Message;
@@ -57,14 +60,7 @@ class LoginController
             return;
         }
 
-        $user = Usuario::getUserByName($username);
-
-        if (empty($user->Password)) {
-            $this->show(errorMessage: "Usuario o contraseña incorrecta");
-            return;
-        }
-
-        if (!password_verify($password, $user->Password)) {
+        if (!Auth::login($username, $password, false)) {
             $this->show(errorMessage: "Usuario o contraseña incorrecta");
             return;
         }

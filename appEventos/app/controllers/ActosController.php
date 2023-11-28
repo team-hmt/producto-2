@@ -22,7 +22,18 @@ class ActosController
 
         if ($result = Router::read())
         {
-            $params["message"] = $result;
+            if (isset($result["info"]))
+            {
+                $params["info"] = $result["info"];
+            }
+            if (isset($result["warn"]))
+            {
+                $params["warn"] = $result["warn"];
+            }
+            if (isset($result["error"]))
+            {
+                $params["error"] = $result["error"];
+            }
         }
 
         // MOCK
@@ -51,19 +62,21 @@ class ActosController
         require(APPROOT . 'app/views/actos/list.php');
     }
 
-    /**
+    /**TODO
      * POST
      * @return void
      */
     #[NoReturn] public function subscribe(): void
     {
-        // TODO
         // Get request movie id
         // Get movie
         // Check if user subsribed
         // Subscribe
+        // Send message
 
-        Router::redirect("/movies", "Ya te has suscrito");
+        Router::redirect("/movies", ["info" => "Te has registrado con éxito para el evento 'Napoleón'."]);
+        Router::redirect("/movies", ["warn" => "Ya estás registrado para el evento 'Napoleón'."]);
+        Router::redirect("/movies", ["error" => "No se ha podido completar tu registro para el evento 'Napoleón'."]);
     }
 
     /**

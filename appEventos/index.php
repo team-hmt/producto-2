@@ -2,16 +2,23 @@
 
 include_once 'config/config.php';
 
+include_once APPROOT . 'app/Auth.php';
+include_once APPROOT . 'app/Router.php';
+
 include_once APPROOT . 'app/controllers/RegisterController.php';
 include_once APPROOT . 'app/controllers/LoginController.php';
 include_once APPROOT . 'app/controllers/ActosController.php';
-include_once APPROOT . 'app/Router.php';
 
+use app\Auth;
 use app\Router;
 
 use app\controllers\ActosController;
 use app\controllers\LoginController;
 use app\controllers\RegisterController;
+
+if (session_status() !== PHP_SESSION_ACTIVE) {
+    session_start();
+}
 
 Router::get("/login", function() {
     $controller = new LoginController();
@@ -31,6 +38,10 @@ Router::get("/registro", function() {
 Router::post("/registro", function() {
     $controller = new RegisterController();
     $controller->handleRegistroSubmission();
+});
+
+Router::get("/logout", function() {
+    Auth::logout();
 });
 
 Router::get("/movies", function() {

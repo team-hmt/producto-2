@@ -18,9 +18,17 @@ require_once APPROOT . 'app/views/widgets/appbar.php';
 
 <div class="container">
 
-    <?php if (isset($params["message"])): ?>
+    <?php if (isset($params["info"])): ?>
+        <div class="alert alert-info" role="alert">
+            <i class="bi bi-info-circle"></i> <?= /** @var array $params */ $params["info"]; ?>
+        </div>
+    <?php elseif (isset($params["warn"])): ?>
         <div class="alert alert-warning" role="alert">
-            <i class="bi bi-info-circle"></i> <?= /** @var array $params */ $params["message"]; ?>
+            <i class="bi bi-info-circle"></i> <?= /** @var array $params */ $params["warn"]; ?>
+        </div>
+    <?php elseif (isset($params["error"])): ?>
+        <div class="alert alert-danger" role="alert">
+            <i class="bi bi-exclamation-circle"></i> <?= /** @var array $params */ $params["error"]; ?>
         </div>
     <?php endif; ?>
 
